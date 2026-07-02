@@ -6,23 +6,24 @@ require_once __DIR__ . '/../views/product.view.php';
 require_once __DIR__ . '/../models/product.model.php';
 require_once __DIR__ . '/../service/service.php';
 
-function saveProduct(){
+function saveProduct(): void
+{
     global $products;
     do {
         $errors = [];
-        $libelle = saisie("Entrez le libellé: ");
-        required($libelle,$errors,"Le libellé est obligatoire");
-        unique($products,$libelle,$errors,"Ce libellé existe déjà");
+        $libelle = demanderLibelleProduit();
+        required($libelle, $errors, MessageErreur::LIBELLE_REQUIRED, ChampErreur::LIBELLE);
+        unique($products, $libelle, $errors, MessageErreur::LIBELLE_UNIQUE, ChampErreur::LIBELLE);
+        $prix = demanderPrixProduit();
+        positive($prix, $errors, MessageErreur::PRIX_POSITIVE, ChampErreur::PRIX);
+        $quantite = demanderQuantiteProduit();
+        positive((float) $quantite, $errors, MessageErreur::QUANTITE_POSITIVE, ChampErreur::QUANTITE);
         showError($errors);
-    } while (count($errors)!= 0);
-    $newProduct=[
-        "ref"=>genererReference($products),
-        "libele" => $libelle,
-    ];
-    $products[] = $newProduct;
+    } while (count($errors) != 0);
 
-
-    
-    
-
+    $newProduct = creerProduit($products, $libelle, $prix, $quantite);
+    afficherProduit($newProduct);
 }
+    
+    
+
