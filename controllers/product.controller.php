@@ -6,24 +6,18 @@ require_once __DIR__ . '/../views/product.view.php';
 require_once __DIR__ . '/../models/product.model.php';
 require_once __DIR__ . '/../service/service.php';
 
-function saveProduct(): void
+function archiverProduit(): void
 {
-    global $products;
-    do {
-        $errors = [];
-        $libelle = demanderLibelleProduit();
-        required($libelle, $errors, MessageErreur::LIBELLE_REQUIRED, ChampErreur::LIBELLE);
-        unique($products, $libelle, $errors, MessageErreur::LIBELLE_UNIQUE, ChampErreur::LIBELLE);
-        $prix = demanderPrixProduit();
-        positive($prix, $errors, MessageErreur::PRIX_POSITIVE, ChampErreur::PRIX);
-        $quantite = demanderQuantiteProduit();
-        positive((float) $quantite, $errors, MessageErreur::QUANTITE_POSITIVE, ChampErreur::QUANTITE);
-        showError($errors);
-    } while (count($errors) != 0);
+    global $productsArchived, $products;
 
-    $newProduct = creerProduit($products, $libelle, $prix, $quantite);
-    afficherProduit($newProduct);
+    $value = demanderLibelleRecherche();
+    $indexArchived = getProductByLibele($products, $value);
+    if ($indexArchived !== -1) {
+        $productArchived = supprimerProduit($indexArchived, $products);
+        $productsArchived[] = $productArchived;
+    } else {
+        afficherProduitIntrouvable();
+    }
 }
-    
-    
+
 

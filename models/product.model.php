@@ -7,15 +7,18 @@ $products = [
 $productsArchived = [];
 
 
-function ajouterProduit(array &$products, string $ref, string $libelle, float $prix, int $quantite): array
+
+function getProductByLibele(array $products, string $value): int
 {
-    $newProduct = [
-        "ref" => $ref,
-        "libele" => $libelle,
-        "prix" => $prix,
-        "quantite" => $quantite,
-    ];
-    $products[] = $newProduct;
-    return $newProduct;
+    foreach ($products as $index => $product) {
+        if ($product["libele"] == $value) {
+            return $index;
+        }
+    }
+    return -1;
 }
 
+function supprimerProduit(int $index, array &$products): array
+{
+    return array_splice($products, $index, 1)[0];
+}
