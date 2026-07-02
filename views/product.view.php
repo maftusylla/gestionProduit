@@ -1,5 +1,4 @@
 <?php
-// view/product.view.php
 require_once __DIR__ . '/../utils/view.utils.php';
 require_once __DIR__ . '/../utils/enums.php';
 
